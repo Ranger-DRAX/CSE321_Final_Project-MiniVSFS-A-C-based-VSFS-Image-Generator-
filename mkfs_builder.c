@@ -8,7 +8,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#define BS 4096u
+#define BS 4096u // define the  block size
 #define INODE_SIZE 128u
 #define ROOT_INO 1u
 #define DIRECT_MAX 12
@@ -16,27 +16,27 @@
 // ================= Structures =================
 #pragma pack(push,1)
 typedef struct {
-    uint32_t magic;
-    uint32_t version;
-    uint32_t block_size;
-    uint64_t total_blocks;
-    uint64_t inode_count;
+    uint32_t magic;               // 0x4D565346
+    uint32_t version;             // 1
+    uint32_t block_size;          // 4096
+    uint64_t total_blocks;        // computed
+    uint64_t inode_count;         // CLI
 
-    uint64_t inode_bitmap_start;
-    uint64_t inode_bitmap_blocks;
-    uint64_t data_bitmap_start;
-    uint64_t data_bitmap_blocks;
+    uint64_t inode_bitmap_start;  // 1
+    uint64_t inode_bitmap_blocks; // 1
+    uint64_t data_bitmap_start;   // 2
+    uint64_t data_bitmap_blocks;  // 1
 
-    uint64_t inode_table_start;
-    uint64_t inode_table_blocks;
-    uint64_t data_region_start;
-    uint64_t data_region_blocks;
+    uint64_t inode_table_start;   // 3
+    uint64_t inode_table_blocks;  // computed
+    uint64_t data_region_start;   // computed
+    uint64_t data_region_blocks;  // computed
 
-    uint64_t root_inode;
-    uint64_t mtime_epoch;
+    uint64_t root_inode;          // 1
+    uint64_t mtime_epoch;         // time(NULL)
 
-    uint32_t flags;
-    uint32_t checksum; // must be last
+    uint32_t flags;               // 0
+    uint32_t checksum;            // crc (must be last)
 } superblock_t;
 #pragma pack(pop)
 _Static_assert(sizeof(superblock_t) == 116, "superblock must fit in one block");
